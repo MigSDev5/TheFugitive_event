@@ -1,6 +1,6 @@
 Dynamic event for dayz epoch developer by Mig.</br>
 
-![alt text](https://github.com/MigSDev5/TheFugitive_event/blob/master/modules/thefugitive.png)
+![alt text](https://github.com/MigSDev5/TheFugitive_event/blob/master/thefugitive.png)
 
 <b>** INSTALLATION **</br>
   - Download the archive.</br>
