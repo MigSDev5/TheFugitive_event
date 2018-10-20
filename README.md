@@ -1,5 +1,7 @@
 Dynamic event for dayz epoch developer by Mig.</br>
 
+![alt text](https://imgur.com/a/DMW7nw9)
+
 <b>** INSTALLATION **</br>
   - Download the archive.</br>
   
