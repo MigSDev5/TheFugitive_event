@@ -10,7 +10,7 @@ private ["_startTime","_markerRadius","_check","_towns","_nameTown","_position",
 _markerRadius = 850;                             // radius of the marker
 _skins = ["Functionary2","Functionary1","Assistant","Citizen4","Pilot","Rocker3","SchoolTeacher","Villager3"];  // this is a class name of the skin of the fugitive
 _fugiWeaponClass = "AK_107_kobra";               // class name fugitive weapon
-_fugiWeaponAmmo = "AK_107_kobra";                // class name of the ammo for the fugitive weapon
+_fugiWeaponAmmo = "30Rnd_545x39_AK";                // class name of the ammo for the fugitive weapon
 _numberMagsWeapon = 4;                           // number magazine for the fugitive weapon 
 _fugiLuncherClass = "M136";                      // clssname of the luncher
 _fugiLuncherAmmo = "M136";                       // clssname ammo of the luncher
