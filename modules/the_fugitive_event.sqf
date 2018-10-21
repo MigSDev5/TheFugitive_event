@@ -50,7 +50,9 @@ _check = {
 		    };
 		} forEach _allPos;
 	};
-	   _m setMarkerPos _thePos;
+	if (_debug) then {
+	    _m setMarkerPos _thePos;
+	};
 	   _thePos
 };
 
