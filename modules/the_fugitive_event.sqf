@@ -4,7 +4,7 @@ Created by Mig.
 You can use, edit, share this script.
 */
 
-private ["_startTime","_markerRadius","_check","_towns","_nameTown","_position","_eventMarker","_dot","_unitGroup","_unit","_newPos","_wp","_allPos","_Pos","_thePos","_monitor","_uptdateRun","_time","_moto","_m","_fugitiveLoot","_fugiCarModel","_unit2","_waitTime","car","_group"];
+private ["_startTime","_markerRadius","_check","_towns","_nameTown","_position","_eventMarker","_dot","_unitGroup","_unit","_newPos","_wp","_allPos","_Pos","_thePos","_monitor","_uptdateRun","_time","_moto","_m","_fugitiveLoot","_fugiCarModel","_unit2","_waitTime","_group"];
 
 //----------- CONFIG --------------------------
 _markerRadius = 850;                             // radius of the marker
@@ -65,7 +65,6 @@ _monitor = {
 	uptdateRun = true;
 	
 	while {alive _unit} do {
-	    private ["_car"];
 	    sleep 20;
 		_Pos = getPos _unit;
 		_curentTime = floor(time);
