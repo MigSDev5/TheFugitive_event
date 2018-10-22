@@ -4,7 +4,7 @@ Created by Mig.
 You can use, edit, share this script.
 */
 
-private ["_startTime","_markerRadius","_check","_towns","_nameTown","_position","_eventMarker","_dot","_unitGroup","_unit","_newPos","_wp","_allPos","_Pos","_thePos","_monitor","_uptdateRun","_time","_moto","_m","_fugitiveLoot","_fugiCarModel","_unit2","_waitTime","_group"];
+private ["_markerRadius","_skins","_fugiWeaponClass","_fugiWeaponAmmo","_numberMagsWeapon","_fugiLuncherClass","_fugiLuncherAmmo","_numberMagsLuncher","_fugiFirstVehicleClass","_fugitiveCoins","_fugiCarModel","_fugitiveMagLoot","_fugitiveWeapLoot","_debug","_waitTime","_startTime","_towns","_randomTowns","_nameTown","_position","_newPos","_allPos","_check","_loop","_getPos","_thePos","_thePos","_monitor","_unit","_eventMarker","_dot","_time","_group","_Pos","_curentTime","_posMoto","_moto","_posCar","_unit2","_m","_aiskin","_unitGroup","_bot","_dot","_wp"];
 
 //----------- CONFIG --------------------------
 _markerRadius = 850;                             // radius of the marker
@@ -51,7 +51,7 @@ _check = {
 		} forEach _allPos;
 	};
 	if (_debug) then {
-	    _m setMarkerPos _thePos;
+	   _m setMarkerPos _thePos;
 	};
 	   _thePos
 };
@@ -62,6 +62,13 @@ _monitor = {
 	_dot = _this select 3;
 	_time = _this select 4;
 	_group = _this select 5;
+	_fugiWeaponClass = _this select 6;
+	_numberMagsWeapon = _this select 7;
+	_fugiWeaponAmmo = _this select 8;
+	_fugiLuncherClass = _this select 9;
+	_numberMagsLuncher = _this select 10;
+	_fugiLuncherAmmo = _this select 11;
+	_fugiFirstVehicleClass = _this select 12;
 	
 	if (uptdateRun) exitWith {};
 	uptdateRun = true;
@@ -70,7 +77,6 @@ _monitor = {
 	    sleep 20;
 		_Pos = getPos _unit;
 		_curentTime = floor(time);
-		systemChat format ["time: %1",_curentTime];
 	    _eventMarker setMarkerPos [(_Pos select 0) + (round random 550),(_pos select 1) + (round random 550),0];
 	    _dot setMarkerPos [_Pos select 0,(_pos select 1) + 600,0];
 		switch true do {
@@ -204,7 +210,7 @@ _dot setMarkerSize [1,1];
 while {alive _unit or (_waitTime < (_curentTime - _startTime))} do {
 	_Pos = _position call _check;
 	_allPos set [count _allPos,_Pos];
-    [_unit,_Pos,_eventMarker,_dot,_startTime,_unitGroup] spawn _monitor;
+    [_unit,_Pos,_eventMarker,_dot,_startTime,_unitGroup,_fugiWeaponClass,_numberMagsWeapon,_fugiWeaponAmmo,_fugiLuncherClass,_numberMagsLuncher,_fugiLuncherAmmo,_fugiFirstVehicleClass] spawn _monitor;
 	_wp =_unitGroup addWaypoint [_Pos,10];
 	_wp setWaypointType "MOVE";
 	waitUntil {(!alive _unit) Or (_unit distance _Pos < 10)};
@@ -218,6 +224,3 @@ if (!alive _unit) then {
     [nil,nil,rTitleText,"The fugitive was killed.!!", "PLAIN",10] call RE;
 	car = nil;
 };
-
-
-
