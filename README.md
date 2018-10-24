@@ -1,5 +1,7 @@
 Dynamic event for dayz epoch developer by Mig.</br>
 
+Uptdated and removing multiples bugs and errors.
+
 ![alt text](https://github.com/MigSDev5/TheFugitive_event/blob/master/thefugitive.png)
 
 <b>** INSTALLATION **</br>
