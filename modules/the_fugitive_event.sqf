@@ -128,17 +128,16 @@ _monitor = {
 			};
 			car = createVehicle ["HMMWV_M1151_M2_CZ_DES_EP1",_posCar, [],0, "NONE"];
 			car setDir (getDir _unit);
-			car setVehicleLock "LOCKED";
 			car engineOn true;
 			dayz_serverObjectMonitor set [count dayz_serverObjectMonitor,car];
 			_unit moveIndriver car;
 		};
 		if ((timeleft >= 700) and (timeleft <= 725) and (isNil "stepFive")) then {   // ~11 minutes
-		    stepFive = true;
+		        stepFive = true;
 			[nil,nil,rTitleText, "The fugitive recruit a gunner for his armed vehicle", "PLAIN",10] call RE;
-            _unit2 = _group createUnit ["TK_Soldier_Engineer_EP1",[0,0,0], [],0, "NONE"];
-		    _unit2 setVariable ["bodyName","Bob",false];
-            [_unit2] joinSilent _group;
+                        _unit2 = _group createUnit ["TK_Soldier_Engineer_EP1",[0,0,0], [],0, "NONE"];
+		        _unit2 setVariable ["bodyName","Bob",false];
+                       [_unit2] joinSilent _group;
 			_unit2 moveInGunner car;
 			_unit2 assignAsGunner car;
 		};			
