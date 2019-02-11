@@ -8,6 +8,10 @@ Updated 24.10.2018 and remove multiples bugs and errors.
   - Download the archive.</br>
   
   - Place the file the_fugitive_event.sqf in your modules folder (dayz_server\modules).</br>
+  - Find this line:</br>
+     EpochEvents = [["any","any","any","any",30,"crash_spawner"],["any","any","any","any",0,"crash_spawner"],["any","any","any","any",15,"supply_drop"]];
+   change to this:<br/>
+      EpochEvents = [["any","any","any","any",40,"the_fugitive_event"],["any","any","any","any",30,"crash_spawner"],["any","any","any","any",0,"crash_spawner"],["any","any","any","any",15,"supply_drop"]];
    done
    
    The Fugitive is an event for Dayz Epoch,</br> 
