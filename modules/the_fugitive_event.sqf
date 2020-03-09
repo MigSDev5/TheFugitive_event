@@ -1,20 +1,21 @@
 /*
-Dayz Event The Fugitive 
+Dayz Event The Fugitive
 Created by Mig.
 You can use, edit, share this script.
 */
 if (!isNil "eventIsAlreadyRunning") exitWith {};
 
-private ["_markerRadius","_skins","_fugiWeaponClass","_fugiWeaponAmmo","_numberMagsWeapon","_fugiLuncherClass","_fugiLuncherAmmo","_numberMagsLuncher","_fugiFirstVehicleClass","_fugitiveCoins","_fugitiveMagLoot","_fugitiveWeapLoot","_debug","_waitTime","_startTime","_towns","_randomTowns","_nameTown","_position","_newPos","_allPos","_check","_loop","_getPos","_thePos","_thePos","_monitor","_unit","_eventMarker","_dot","_time","_group","_Pos","_posMoto","_posCar","_unit2","_m","_aiskin","_unitGroup","_bot","_dot","_wp","_eventRun","_pos1"];
+private ["_markerRadius","_skins","_fugiWeaponClass","_fugiWeaponAmmo","_numberMagsWeapon","_fugiLuncherClass","_fugiLuncherAmmo","_numberMagsLuncher","_fugiFirstVehicleClass","_fugitiveCoins","_fugitiveMagLoot","_fugitiveWeapLoot","_debug","_waitTime","_startTime","_towns","_randomTowns","_nameTown","_position","_newPos","_allPos","_check","_loop","_getPos","_thePos","_thePos","_monitor","_unit","_eventMarker","_dot","_time","_group","_Pos","_posMoto","_posCar","_unit2","_m","_aiskin","_unitGroup","_bot","_dot","_wp","_eventRun","_pos1","_keyColor","_keyNumber","_keySelected","_isKeyOK","_characterID","_keepVehicle"];
 
 eventIsAlreadyRunning = true;
 
 //----------- CONFIG --------------------------
+_keepVehicle = true;                             // save vehicle in database and put key in unit
 _markerRadius = 850;                             // radius of the marker
 _skins = ["Functionary2","Functionary1","Assistant","Citizen4","Pilot","Rocker3","SchoolTeacher","Villager3"];  // this is a class name of the skin of the fugitive
 _fugiWeaponClass = "AK_107_kobra";               // class name fugitive weapon
 _fugiWeaponAmmo = "30Rnd_545x39_AK";                // class name of the ammo for the fugitive weapon
-_numberMagsWeapon = 4;                           // number magazine for the fugitive weapon 
+_numberMagsWeapon = 4;                           // number magazine for the fugitive weapon
 _fugiLuncherClass = "M136";                      // clssname of the luncher
 _fugiLuncherAmmo = "M136";                       // clssname ammo of the luncher
 _numberMagsLuncher = 3;                          // number magazines for the luncher
@@ -23,7 +24,7 @@ _fugitiveCoins = 25000;                          // number  Coin in the fugitive
 _fugitiveMagLoot = [["ItemWoodFloor",6],["ItemSandbag",7],["workbench_kit",9],["metal_floor_kit",12],["ItemDesertTent",10]];  // loot magazines on the fugitive
 _fugitiveWeapLoot = ["ItemEtool","ItemCrowbar","ItemKnife","ItemSledge","ItemCompass","Binocular"];    // loot tools on the fugitive
 _debug = false;                                   // activate/deactivate debug markers
-_waitTime          = 2400;                       // time end event
+_waitTime          = 2400;                       // time end event                    // time end event
 //------------END CONFIG ---------------------------
 
 
@@ -62,7 +63,7 @@ _check = {
         timeleft = 0;
         _eventRun = true;
         while {_eventRun} do {
-            timeleft = timeleft + 1;  
+            timeleft = timeleft + 1;
             uisleep 1;
         };
     };
@@ -80,16 +81,17 @@ _monitor = {
 	_numberMagsLuncher = _this select 10;
 	_fugiLuncherAmmo = _this select 11;
 	_fugiFirstVehicleClass = _this select 12;
-	
+	_keepVehicle = _this select 13;
+
 	if (uptdateRun) exitWith {};
 	uptdateRun = true;
-	
+
 	while {alive _unit} do {
 	    sleep 20;
 		_Pos = getPos _unit;
 	    _eventMarker setMarkerPos [(_Pos select 0) + (round random 550),(_pos select 1) + (round random 550),0];
 	    _dot setMarkerPos [_Pos select 0,(_pos select 1) + 600,0];
-		
+
         if ((timeleft >= 200) and (timeleft <= 225)and (isNil "stepOne")) then { // ~3 minutes
 		    stepOne = true;
 			[nil,nil,rTitleText, "Be careful, the fugitive steals a weapon !", "PLAIN",10] call RE;
@@ -120,27 +122,47 @@ _monitor = {
 		if ((timeleft >= 600) and (timeleft <= 660) and (isNil "stepFour")) then {   // ~10 minutes
 		    stepFour = true;
 			[nil,nil,rTitleText, "The fugitive to steal an armed vehicle, find it!", "PLAIN",10] call RE;
-			_posCar = [getPos _unit,0,36,0,0,0.5,0] call BIS_fnc_findSafePos;
+			_posCar = [getPosATL _unit,0,36,0,0,0.5,0] call BIS_fnc_findSafePos;
 			if (!isNil "moto") then {
 			    moto setFuel 0;
 			    sleep 2;
 			    deleteVehicle moto;
 			};
 			car = createVehicle ["HMMWV_M1151_M2_CZ_DES_EP1",_posCar, [],0, "NONE"];
+			//car setPosATL _posCar;
 			car setDir (getDir _unit);
 			car engineOn true;
+			clearWeaponCargoGlobal car;
+	        clearMagazineCargoGlobal car;
 			dayz_serverObjectMonitor set [count dayz_serverObjectMonitor,car];
 			_unit moveIndriver car;
+
+			if (_keepVehicle) then {
+	            _keyColor = DZE_keyColors call BIS_fnc_selectRandom;
+		        _keyNumber = (floor(random 2500)) + 1;
+		        _keySelected = format["ItemKey%1%2",_keyColor,_keyNumber];
+		        _isKeyOK = isClass(configFile >> "CfgWeapons" >> _keySelected);
+		        _characterID = str(getNumber(configFile >> "CfgWeapons" >> _keySelected >> "keyid"));
+
+		        if (_isKeyOK) then {
+				    _unit addWeapon _keySelected;
+				    car setVehicleLock "locked";
+				    car setVariable ["CharacterID",_characterID,true];
+		        } else {
+			        car setVariable ["CharacterID","0",true];
+			        diag_log format["There was a problem generating a key for vehicle %1 Event the Fugitive",car];
+		        };
+            };
 		};
 		if ((timeleft >= 700) and (timeleft <= 725) and (isNil "stepFive")) then {   // ~11 minutes
-		        stepFive = true;
+		    stepFive = true;
 			[nil,nil,rTitleText, "The fugitive recruit a gunner for his armed vehicle", "PLAIN",10] call RE;
-                        _unit2 = _group createUnit ["TK_Soldier_Engineer_EP1",[0,0,0], [],0, "NONE"];
-		        _unit2 setVariable ["bodyName","Bob",false];
-                       [_unit2] joinSilent _group;
+            _unit2 = _group createUnit ["TK_Soldier_Engineer_EP1",[0,0,0], [],0, "NONE"];
+		    _unit2 setVariable ["bodyName","Bob",false];
+            [_unit2] joinSilent _group;
 			_unit2 moveInGunner car;
 			_unit2 assignAsGunner car;
-		};			
+		};
 	};
 };
 
@@ -194,7 +216,7 @@ if (count _fugitiveWeapLoot > 0) then {
          _unit addWeapon _x;
     } forEach _fugitiveWeapLoot;
 };
-	
+
 if (_debug) then {
 	_unit spawn {
 	    _unit = _this;
@@ -208,7 +230,7 @@ if (_debug) then {
             _bot setMarkerSize [1,1];
 			sleep 1;
 			deleteMarker _bot;
-		};	
+		};
 	};
 };
 
@@ -224,10 +246,10 @@ _dot setMarkerSize [1,1];
 
 while {true} do {
     if (!alive _unit) exitWith {};
-	if (timeleft > _waitTime) exitWith {};
+	if (timeleft > _waitTime) exitWith {{deleteVehicle _x} forEach [_unit,_unit2,moto,car];};
 	_Pos1 = _position call _check;
 	_allPos set [count _allPos,_Pos1];
-    [_unit,_Pos1,_eventMarker,_dot,_startTime,_unitGroup,_fugiWeaponClass,_numberMagsWeapon,_fugiWeaponAmmo,_fugiLuncherClass,_numberMagsLuncher,_fugiLuncherAmmo,_fugiFirstVehicleClass] spawn _monitor;
+    [_unit,_Pos1,_eventMarker,_dot,_startTime,_unitGroup,_fugiWeaponClass,_numberMagsWeapon,_fugiWeaponAmmo,_fugiLuncherClass,_numberMagsLuncher,_fugiLuncherAmmo,_fugiFirstVehicleClass,_keepVehicle] spawn _monitor;
 	_wp =_unitGroup addWaypoint [_Pos1,0];
 	_wp setWaypointType "MOVE";
 	_wp setWaypointCompletionRadius 10;
@@ -241,7 +263,42 @@ eventIsAlreadyRunning = nil;
 _eventRun = false;
 
 if (!alive _unit) then {
+    private ["_class","_characterID","_worldspace","_hitpoints","_damage","_array","_hit","_selection","_inventory","_fuel","_uid","_key"];
+
     [nil,nil,rTitleText,"The fugitive was killed.!!", "PLAIN",10] call RE;
+	if (_keepVehicle) then {
+	    _class = typeOf car;
+	    _characterID = car getVariable ["CharacterID", "0"];
+	    _worldspace	= [getDir car, getPosATL car];
+	    _hitpoints = car call vehicle_getHitpoints;
+	    _damage = damage car;
+	    _array = [];
+
+	    {
+		    _hit = [car,_x] call object_getHit;
+		    _selection = getText (configFile >> "CfgVehicles" >> (typeOf car) >> "HitPoints" >> _x >> "name");
+			_array set [count _array,[_selection,_hit]];
+	    } count _hitpoints;
+
+	    _inventory 	= [
+		    getWeaponCargo car,
+		    getMagazineCargo car,
+		    getBackpackCargo car
+	    ];
+
+	    _fuel = fuel car;
+	    _uid = _worldspace call dayz_objectUID2;
+
+	    _key = format["CHILD:308:%1:%2:%3:%4:%5:%6:%7:%8:%9:",dayZ_instance,_class,_damage,_characterID,_worldspace,_inventory,_array,_fuel,_uid];
+        _key call server_hiveWrite;
+
+	    car setVariable ["ObjectID", _uid, true];
+	    car setVariable ["lastUpdate",diag_tickTime];
+
+	    car call fnc_veh_ResetEH;
+	    PVDZE_veh_Init = car;
+	    publicVariable "PVDZE_veh_Init";
+	};
 	car = nil;
 	moto = nil;
 };
