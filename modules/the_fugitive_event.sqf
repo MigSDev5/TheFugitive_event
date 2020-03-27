@@ -15,14 +15,15 @@ _markerRadius = 850;                             // radius of the marker
 _skins = ["Functionary2","Functionary1","Assistant","Citizen4","Pilot","Rocker3","SchoolTeacher","Villager3"];  // this is a class name of the skin of the fugitive
 _fugiWeaponClass = "AK_107_kobra";               // class name fugitive weapon
 _fugiWeaponAmmo = "30Rnd_545x39_AK";                // class name of the ammo for the fugitive weapon
-_numberMagsWeapon = 4;                           // number magazine for the fugitive weapon
+_numberMagsWeapon = 2;                           // number magazine for the fugitive weapon
 _fugiLuncherClass = "M136";                      // clssname of the luncher
 _fugiLuncherAmmo = "M136";                       // clssname ammo of the luncher
-_numberMagsLuncher = 3;                          // number magazines for the luncher
+_numberMagsLuncher = 2;                          // number magazines for the luncher
 _fugiFirstVehicleClass = "Old_moto_TK_Civ_EP1";  // class name of the first vehicle
 _fugitiveCoins = 25000;                          // number  Coin in the fugitive ,if you want a random amount : round(random 20) * 1000; // number between 0 and 20 000
-_fugitiveMagLoot = [["ItemWoodFloor",6],["ItemSandbag",7],["workbench_kit",9],["metal_floor_kit",12],["ItemDesertTent",10]];  // loot magazines on the fugitive
-_fugitiveWeapLoot = ["ItemEtool","ItemCrowbar","ItemKnife","ItemSledge","ItemCompass","Binocular"];    // loot tools on the fugitive
+
+_fugitiveMagLoot = [["ItemWoodFloor",1],["ItemSandbag",2],["workbench_kit",1],["metal_floor_kit",2],["ItemDesertTent",1]];  // loot magazines on the fugitive must not exceed 50 items, otherwise infistar kick
+_fugitiveWeapLoot = [ItemSledge","ItemCompass","Binocular"];    // loot tools on the fugitive
 _debug = false;                                   // activate/deactivate debug markers
 _waitTime          = 2400;                       // time end event                    // time end event
 //------------END CONFIG ---------------------------
