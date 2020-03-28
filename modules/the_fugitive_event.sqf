@@ -5,7 +5,7 @@ You can use, edit, share this script.
 */
 if (!isNil "eventIsAlreadyRunning") exitWith {};
 
-private ["_markerRadius","_skins","_fugiWeaponClass","_fugiWeaponAmmo","_numberMagsWeapon","_fugiLuncherClass","_fugiLuncherAmmo","_numberMagsLuncher","_fugiFirstVehicleClass","_fugitiveCoins","_fugitiveMagLoot","_fugitiveWeapLoot","_debug","_waitTime","_startTime","_towns","_randomTowns","_nameTown","_position","_newPos","_allPos","_check","_loop","_getPos","_thePos","_thePos","_monitor","_unit","_eventMarker","_dot","_time","_group","_Pos","_posMoto","_posCar","_unit2","_m","_aiskin","_unitGroup","_bot","_dot","_wp","_eventRun","_pos1","_keyColor","_keyNumber","_keySelected","_isKeyOK","_characterID","_keepVehicle"];
+private ["_markerRadius","_skins","_fugiWeaponClass","_fugiWeaponAmmo","_numberMagsWeapon","_fugiLuncherClass","_fugiLuncherAmmo","_numberMagsLuncher","_fugiFirstVehicleClass","_fugitiveCoins","_fugitiveMagLoot","_fugitiveWeapLoot","_debug","_waitTime","_startTime","_towns","_randomTowns","_nameTown","_position","_newPos","_allPos","_check","_loop","_getPos","_thePos","_thePos","_monitor","_unit","_eventMarker","_dot","_time","_group","_Pos","_posMoto","_posCar","_unit2","_m","_aiskin","_unitGroup","_bot","_dot","_wp","_eventRun","_pos1","_keyColor","_keyNumber","_keySelected","_isKeyOK","_characterID","_keepVehicle","_vehicleLoot","_vehicle_loot","_isWeapons","_isMagazine"];
 
 eventIsAlreadyRunning = true;
 
@@ -15,15 +15,16 @@ _markerRadius = 850;                             // radius of the marker
 _skins = ["Functionary2","Functionary1","Assistant","Citizen4","Pilot","Rocker3","SchoolTeacher","Villager3"];  // this is a class name of the skin of the fugitive
 _fugiWeaponClass = "AK_107_kobra";               // class name fugitive weapon
 _fugiWeaponAmmo = "30Rnd_545x39_AK";                // class name of the ammo for the fugitive weapon
-_numberMagsWeapon = 2;                           // number magazine for the fugitive weapon
+_numberMagsWeapon = 4;                           // number magazine for the fugitive weapon
 _fugiLuncherClass = "M136";                      // clssname of the luncher
 _fugiLuncherAmmo = "M136";                       // clssname ammo of the luncher
-_numberMagsLuncher = 2;                          // number magazines for the luncher
+_numberMagsLuncher = 3;                          // number magazines for the luncher
 _fugiFirstVehicleClass = "Old_moto_TK_Civ_EP1";  // class name of the first vehicle
+_vehicleLoot = true;                                  // add some loot inside vehicle
+_vehicle_loot = [["forest_large_net_kit",1],["cinder_garage_kit",2],["CinderBlocks",10],["ChainSaw",1],["M249_m145_EP1_DZE",1],["MG36_camo",2]];    // loot added inside vehicle
 _fugitiveCoins = 25000;                          // number  Coin in the fugitive ,if you want a random amount : round(random 20) * 1000; // number between 0 and 20 000
-
-_fugitiveMagLoot = [["ItemWoodFloor",1],["ItemSandbag",2],["workbench_kit",1],["metal_floor_kit",2],["ItemDesertTent",1]];  // loot magazines on the fugitive must not exceed 50 items, otherwise infistar kick
-_fugitiveWeapLoot = [ItemSledge","ItemCompass","Binocular"];    // loot tools on the fugitive
+_fugitiveMagLoot = [["ItemWoodFloor",2],["ItemSandbag",2],["workbench_kit",1],["metal_floor_kit",2],["ItemDesertTent",1]];  // loot magazines on the fugitive
+_fugitiveWeapLoot = ["ItemSledge","ItemCompass","Binocular"];    // loot tools on the fugitive
 _debug = false;                                   // activate/deactivate debug markers
 _waitTime          = 2400;                       // time end event                    // time end event
 //------------END CONFIG ---------------------------
@@ -83,6 +84,8 @@ _monitor = {
 	_fugiLuncherAmmo = _this select 11;
 	_fugiFirstVehicleClass = _this select 12;
 	_keepVehicle = _this select 13;
+	_vehicleLoot = _this select 14;
+	_vehicle_loot = _this select 15;
 
 	if (uptdateRun) exitWith {};
 	uptdateRun = true;
@@ -130,13 +133,25 @@ _monitor = {
 			    deleteVehicle moto;
 			};
 			car = createVehicle ["HMMWV_M1151_M2_CZ_DES_EP1",_posCar, [],0, "NONE"];
-			//car setPosATL _posCar;
 			car setDir (getDir _unit);
 			car engineOn true;
 			clearWeaponCargoGlobal car;
 	        clearMagazineCargoGlobal car;
 			dayz_serverObjectMonitor set [count dayz_serverObjectMonitor,car];
 			_unit moveIndriver car;
+
+			if (_vehicleLoot) then {
+				{
+	                _isWeapons = isClass(configFile >> "CfgWeapons" >> _x select 0);
+                    _isMagazine = isClass(configFile >> "cfgMagazines" >> _x select 0);
+                    if (_isWeapons) then {
+                        car addWeaponCargoGlobal[_x select 0,_x select 1];
+                    };
+                    if (_isMagazine) then {
+                        car addmagazineCargoGlobal[_x select 0,_x select 1];
+                    };
+                } forEach _vehicle_loot;
+			};
 
 			if (_keepVehicle) then {
 	            _keyColor = DZE_keyColors call BIS_fnc_selectRandom;
@@ -250,7 +265,7 @@ while {true} do {
 	if (timeleft > _waitTime) exitWith {{deleteVehicle _x} forEach [_unit,_unit2,moto,car];};
 	_Pos1 = _position call _check;
 	_allPos set [count _allPos,_Pos1];
-    [_unit,_Pos1,_eventMarker,_dot,_startTime,_unitGroup,_fugiWeaponClass,_numberMagsWeapon,_fugiWeaponAmmo,_fugiLuncherClass,_numberMagsLuncher,_fugiLuncherAmmo,_fugiFirstVehicleClass,_keepVehicle] spawn _monitor;
+    [_unit,_Pos1,_eventMarker,_dot,_startTime,_unitGroup,_fugiWeaponClass,_numberMagsWeapon,_fugiWeaponAmmo,_fugiLuncherClass,_numberMagsLuncher,_fugiLuncherAmmo,_fugiFirstVehicleClass,_keepVehicle,_vehicleLoot,_vehicle_loot] spawn _monitor;
 	_wp =_unitGroup addWaypoint [_Pos1,0];
 	_wp setWaypointType "MOVE";
 	_wp setWaypointCompletionRadius 10;
