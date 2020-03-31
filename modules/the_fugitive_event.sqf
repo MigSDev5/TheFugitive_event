@@ -262,10 +262,10 @@ _dot setMarkerSize [1,1];
 
 while {true} do {
     if (!alive _unit) exitWith {};
-	if (timeleft > _waitTime) exitWith {{deleteVehicle _x} forEach [_unit,_unit2,moto,car];};
 	_Pos1 = _position call _check;
 	_allPos set [count _allPos,_Pos1];
     [_unit,_Pos1,_eventMarker,_dot,_startTime,_unitGroup,_fugiWeaponClass,_numberMagsWeapon,_fugiWeaponAmmo,_fugiLuncherClass,_numberMagsLuncher,_fugiLuncherAmmo,_fugiFirstVehicleClass,_keepVehicle,_vehicleLoot,_vehicle_loot] spawn _monitor;
+	if (timeleft > _waitTime) exitWith {{deleteVehicle _x} forEach [_unit,_unit2,moto,car];};
 	_wp =_unitGroup addWaypoint [_Pos1,0];
 	_wp setWaypointType "MOVE";
 	_wp setWaypointCompletionRadius 10;
@@ -282,7 +282,7 @@ if (!alive _unit) then {
     private ["_class","_characterID","_worldspace","_hitpoints","_damage","_array","_hit","_selection","_inventory","_fuel","_uid","_key"];
 
     [nil,nil,rTitleText,"The fugitive was killed.!!", "PLAIN",10] call RE;
-	if (_keepVehicle) then {
+	if (_keepVehicle and (!isNil "car")) then {
 	    _class = typeOf car;
 	    _characterID = car getVariable ["CharacterID", "0"];
 	    _worldspace	= [getDir car, getPosATL car];
