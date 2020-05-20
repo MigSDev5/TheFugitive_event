@@ -5,7 +5,7 @@ You can use, edit, share this script.
 */
 if (!isNil "eventIsAlreadyRunning") exitWith {};
 
-private ["_markerRadius","_skins","_fugiWeaponClass","_fugiWeaponAmmo","_numberMagsWeapon","_fugiLuncherClass","_fugiLuncherAmmo","_numberMagsLuncher","_fugiFirstVehicleClass","_fugitiveCoins","_fugitiveMagLoot","_fugitiveWeapLoot","_debug","_waitTime","_startTime","_towns","_randomTowns","_nameTown","_position","_newPos","_allPos","_check","_loop","_getPos","_thePos","_thePos","_monitor","_unit","_eventMarker","_dot","_time","_group","_Pos","_posMoto","_posCar","_unit2","_m","_aiskin","_unitGroup","_bot","_dot","_wp","_eventRun","_pos1","_keyColor","_keyNumber","_keySelected","_isKeyOK","_characterID","_keepVehicle","_vehicleLoot","_vehicle_loot","_isWeapons","_isMagazine"];
+private ["_markerRadius","_skins","_fugiWeaponClass","_fugiWeaponAmmo","_numberMagsWeapon","_fugiLuncherClass","_fugiLuncherAmmo","_numberMagsLuncher","_fugiFirstVehicleClass","_fugitiveCoins","_fugitiveMagLoot","_fugitiveWeapLoot","_debug","_waitTime","_startTime","_towns","_randomTowns","_nameTown","_position","_newPos","_allPos","_check","_loop","_getPos","_thePos","_thePos","_monitor","_unit","_eventMarker","_dot","_time","_group","_Pos","_posMoto","_posCar","_unit2","_m","_aiskin","_unitGroup","_bot","_dot","_wp","_eventRun","_pos1","_keyColor","_keyNumber","_keySelected","_isKeyOK","_characterID","_keepVehicle","_vehicleLoot","_vehicle_loot","_isWeapons","_isMagazine","_coinOnFugitive"];
 
 eventIsAlreadyRunning = true;
 
@@ -22,6 +22,7 @@ _numberMagsLuncher = 3;                          // number magazines for the lun
 _fugiFirstVehicleClass = "Old_moto_TK_Civ_EP1";  // class name of the first vehicle
 _vehicleLoot = true;                                  // add some loot inside vehicle
 _vehicle_loot = [["forest_large_net_kit",1],["cinder_garage_kit",2],["CinderBlocks",10],["ChainSaw",1],["M249_m145_EP1_DZE",1],["MG36_camo",2]];    // loot added inside vehicle
+_coinOnFugitive = false;                            // put coins on fugutive (true / false)
 _fugitiveCoins = 25000;                          // number  Coin in the fugitive ,if you want a random amount : round(random 20) * 1000; // number between 0 and 20 000
 _fugitiveMagLoot = [["ItemWoodFloor",2],["ItemSandbag",2],["workbench_kit",1],["metal_floor_kit",2],["ItemDesertTent",1]];  // loot magazines on the fugitive
 _fugitiveWeapLoot = ["ItemSledge","ItemCompass","Binocular"];    // loot tools on the fugitive
@@ -206,7 +207,7 @@ _unit = _unitGroup createUnit [_aiskin, _newPos, [], 10, "PRIVATE"];
 [_unit] joinSilent _unitGroup;
 _unit setVariable ["bodyName","Stan",false];
 
-if (_fugitiveCoins != 0) then {
+if ((_fugitiveCoins != 0) and _coinOnFugitive) then {
     _unit setVariable["cashMoney",_fugitiveCoins,true];
 };
 
